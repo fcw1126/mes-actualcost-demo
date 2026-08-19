@@ -53,7 +53,7 @@ padding:10px 14px;border-radius:999px;z-index:1}.dot{display:inline-block;width:
 .blue{background:#e7efff;color:#2563eb}.violet{background:#eeeafd;color:#7c5ce7}.green{background:#e4f7f0;color:#0f9f72}
 .red{background:#fdebed;color:#dc4c60}.amber{background:#fff4dc;color:#d78a0b}
 .kpi span{display:block;color:var(--muted);font-size:12px}.kpi strong{display:block;font-size:22px;margin:4px 0}.kpi small{color:#9aa4b2}
-.cf-filter{cursor:pointer;border:2px solid transparent;transition:.15s}.cf-filter:hover{border-color:#cfd8e6}.cf-filter.active{border-color:var(--primary);background:#f2f6ff}
+.kpi-filter{cursor:pointer;border:2px solid transparent;transition:.15s}.kpi-filter:hover{border-color:#cfd8e6}.kpi-filter.active{border-color:var(--primary);background:#f2f6ff}
 .grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:17px;margin-bottom:17px}
 .panel{padding:20px}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .panel-head h3{margin:0;font-size:17px}.panel-head p{margin:5px 0 0;font-size:12px;color:var(--muted)}
@@ -559,9 +559,9 @@ border-radius:11px;background:#eef4ff;border:1px solid #d8e5ff;color:#254f91;fon
   </div>
 
   <div class="kpis" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-    <div class="card kpi"><div class="kpi-icon blue">✓</div><div><span data-t="calculatedSteps">已計算步驟</span><strong id="cmpCalculated">0</strong><small data-t="calculatedStepsSub">MES step cost calculated</small></div></div>
-    <div class="card kpi"><div class="kpi-icon red">!</div><div><span data-t="missingSteps">缺少步驟</span><strong id="cmpMissing MES Step">0</strong><small data-t="missingStepsSub">Routing without MES data</small></div></div>
-    <div class="card kpi"><div class="kpi-icon amber">?</div><div><span data-t="unmapped">未對應</span><strong id="cmpMissing">0</strong><small data-t="unmappedSub">Equipment or routing not mapped</small></div></div>
+    <div class="card kpi kpi-filter" data-status="Calculated"><div class="kpi-icon blue">✓</div><div><span data-t="calculatedSteps">已計算步驟</span><strong id="cmpCalculated">0</strong><small data-t="calculatedStepsSub">MES step cost calculated</small></div></div>
+    <div class="card kpi kpi-filter" data-status="Missing MES Step"><div class="kpi-icon red">!</div><div><span data-t="missingSteps">缺少步驟</span><strong id="cmpMissing MES Step">0</strong><small data-t="missingStepsSub">Routing without MES data</small></div></div>
+    <div class="card kpi kpi-filter" data-status="Unmapped"><div class="kpi-icon amber">?</div><div><span data-t="unmapped">未對應</span><strong id="cmpMissing">0</strong><small data-t="unmappedSub">Equipment or routing not mapped</small></div></div>
     <div class="card kpi"><div class="kpi-icon green">%</div><div><span data-t="routingCoverage">Routing Coverage</span><strong id="cmpRate">0%</strong><small data-t="routingCoverageSub">Calculated routing steps</small></div></div>
   </div>
 
@@ -613,16 +613,17 @@ border-radius:11px;background:#eef4ff;border:1px solid #d8e5ff;color:#254f91;fon
         <option value="Close" data-t="closeMatch">誤差5%內</option>
         <option value="Mismatch" data-t="mismatchWord">誤差較大</option>
         <option value="Unmatched" data-t="unmatchedWord">找不到對應</option>
+        <option value="GAP" data-t="reconcileGapLabel">明顯落差</option>
       </select>
       <button class="btn soft" id="exportReconcile" data-t="exportExcel">匯出 Excel</button>
     </div>
   </div>
 
   <div class="kpis" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-    <div class="card kpi"><div class="kpi-icon blue">Σ</div><div><span data-t="reconcileTotalPairs">比對筆數</span><strong id="rcTotal">0</strong><small>Actual Cost records</small></div></div>
-    <div class="card kpi"><div class="kpi-icon green">✓</div><div><span data-t="exactMatch">完全一致</span><strong id="rcExact">0</strong><small>Exact match</small></div></div>
-    <div class="card kpi"><div class="kpi-icon amber">≈</div><div><span data-t="closeMatch">誤差5%內</span><strong id="rcClose">0</strong><small>Within 5%</small></div></div>
-    <div class="card kpi"><div class="kpi-icon red">!</div><div><span data-t="reconcileGapLabel">明顯落差</span><strong id="rcGap">0</strong><small>Mismatch / Unmatched</small></div></div>
+    <div class="card kpi kpi-filter" data-status="ALL"><div class="kpi-icon blue">Σ</div><div><span data-t="reconcileTotalPairs">比對筆數</span><strong id="rcTotal">0</strong><small>Actual Cost records</small></div></div>
+    <div class="card kpi kpi-filter" data-status="Exact"><div class="kpi-icon green">✓</div><div><span data-t="exactMatch">完全一致</span><strong id="rcExact">0</strong><small>Exact match</small></div></div>
+    <div class="card kpi kpi-filter" data-status="Close"><div class="kpi-icon amber">≈</div><div><span data-t="closeMatch">誤差5%內</span><strong id="rcClose">0</strong><small>Within 5%</small></div></div>
+    <div class="card kpi kpi-filter" data-status="GAP"><div class="kpi-icon red">!</div><div><span data-t="reconcileGapLabel">明顯落差</span><strong id="rcGap">0</strong><small>Mismatch / Unmatched</small></div></div>
   </div>
 
   <div class="panel">
@@ -726,10 +727,10 @@ border-radius:11px;background:#eef4ff;border:1px solid #d8e5ff;color:#254f91;fon
 
   <div class="kpis">
     <div class="card kpi"><div class="kpi-icon blue">📦</div><div><span data-t="cfTotalCsItems">箱計價料號總數</span><strong id="cfTotalCsItems">0</strong></div></div>
-    <div class="card kpi cf-filter active" id="cfFilterALL" data-conf="ALL"><div class="kpi-icon green">✓</div><div><span data-t="cfComputed">已可計算係數</span><strong id="cfComputed">0</strong></div></div>
-    <div class="card kpi cf-filter" id="cfFilterhigh" data-conf="high"><div class="kpi-icon green">●</div><div><span data-t="cfHigh">高信心度</span><strong id="cfHigh">0</strong></div></div>
-    <div class="card kpi cf-filter" id="cfFiltermedium" data-conf="medium"><div class="kpi-icon amber">●</div><div><span data-t="cfMedium">中信心度</span><strong id="cfMedium">0</strong></div></div>
-    <div class="card kpi cf-filter" id="cfFilterlow" data-conf="low"><div class="kpi-icon red">●</div><div><span data-t="cfLow">低信心度</span><strong id="cfLow">0</strong></div></div>
+    <div class="card kpi kpi-filter active" id="cfFilterALL" data-conf="ALL"><div class="kpi-icon green">✓</div><div><span data-t="cfComputed">已可計算係數</span><strong id="cfComputed">0</strong></div></div>
+    <div class="card kpi kpi-filter" id="cfFilterhigh" data-conf="high"><div class="kpi-icon green">●</div><div><span data-t="cfHigh">高信心度</span><strong id="cfHigh">0</strong></div></div>
+    <div class="card kpi kpi-filter" id="cfFiltermedium" data-conf="medium"><div class="kpi-icon amber">●</div><div><span data-t="cfMedium">中信心度</span><strong id="cfMedium">0</strong></div></div>
+    <div class="card kpi kpi-filter" id="cfFilterlow" data-conf="low"><div class="kpi-icon red">●</div><div><span data-t="cfLow">低信心度</span><strong id="cfLow">0</strong></div></div>
     <div class="card kpi"><div class="kpi-icon"><span>—</span></div><div><span data-t="cfNoData">尚無資料</span><strong id="cfNoData">0</strong></div></div>
   </div>
 
@@ -1229,15 +1230,17 @@ function renderReconcile(){
   const all=reconcileMatches();
   const q=clean($("reconcileSearch")?.value).toLowerCase();
   const sf=$("reconcileStatusFilter")?.value||"ALL";
-  const filtered=all.filter(r=>(!q||r.item.toLowerCase().includes(q))&&(sf==="ALL"||r.status===sf));
+  const isGap=r=>r.status==="Mismatch"||r.status==="Unmatched";
+  const filtered=all.filter(r=>(!q||r.item.toLowerCase().includes(q))&&(sf==="ALL"||(sf==="GAP"?isGap(r):r.status===sf)));
 
   const exact=all.filter(r=>r.status==="Exact").length;
   const close=all.filter(r=>r.status==="Close").length;
-  const gap=all.filter(r=>r.status==="Mismatch"||r.status==="Unmatched").length;
+  const gap=all.filter(isGap).length;
   $("rcTotal").textContent=fmt(all.length);
   $("rcExact").textContent=fmt(exact);
   $("rcClose").textContent=fmt(close);
   $("rcGap").textContent=fmt(gap);
+  $("reconcile").querySelectorAll(".kpi-filter").forEach(el=>el.classList.toggle("active",el.dataset.status===sf));
 
   const pages=Math.max(1,Math.ceil(filtered.length/reconcilePageSize));
   reconcilePage=Math.min(Math.max(1,reconcilePage),pages);
@@ -1452,7 +1455,7 @@ function renderConvFactor(){
   $("cfLow").textContent=fmt(data.low);
   $("cfNoData").textContent=fmt(data.noData);
 
-  document.querySelectorAll(".cf-filter").forEach(el=>el.classList.toggle("active",el.dataset.conf===cfConfFilter));
+  $("convfactor").querySelectorAll(".kpi-filter").forEach(el=>el.classList.toggle("active",el.dataset.conf===cfConfFilter));
 
   const q=clean($("cfSearch")?.value).toLowerCase();
   let filtered=cfConfFilter==="ALL"?data.rows:data.rows.filter(r=>r.confidence===cfConfFilter);
@@ -1513,11 +1516,12 @@ function renderWoCompareKpis(){
   const plan=wocRowsFor(wocDept,"5_Plan Adjudication");
   const tierKey=matched.length?Object.keys(matched[0].DATA).find(k=>k.startsWith("Tier")):null;
   const tierCount=tt=>tierKey?matched.filter(r=>clean(r.DATA[tierKey]).startsWith(tt)).length:0;
+  const active=s=>s===wocSheet?"active":"";
   el.innerHTML=`
-    <div class="card kpi"><div class="kpi-icon green">✓</div><div><span>${t("wocMatchedCount")}</span><strong>${fmt(matched.length)}</strong><small>T1 ${fmt(tierCount("T1"))} · T2 ${fmt(tierCount("T2"))} · T3 ${fmt(tierCount("T3"))} · T4 ${fmt(tierCount("T4"))}</small></div></div>
-    <div class="card kpi"><div class="kpi-icon amber">!</div><div><span>${t("wocAcOnlyCount")}</span><strong>${fmt(acOnly.length)}</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon amber">!</div><div><span>${t("wocMesOnlyCount")}</span><strong>${fmt(mesOnly.length)}</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon blue">%</div><div><span>${t("wocPlanCount")}</span><strong>${fmt(plan.length)}</strong></div></div>`;
+    <div class="card kpi kpi-filter ${active("2_Matched WOs (1-to-1)")}" data-wocsheet="2_Matched WOs (1-to-1)"><div class="kpi-icon green">✓</div><div><span>${t("wocMatchedCount")}</span><strong>${fmt(matched.length)}</strong><small>T1 ${fmt(tierCount("T1"))} · T2 ${fmt(tierCount("T2"))} · T3 ${fmt(tierCount("T3"))} · T4 ${fmt(tierCount("T4"))}</small></div></div>
+    <div class="card kpi kpi-filter ${active("3_AC WOs unmatched")}" data-wocsheet="3_AC WOs unmatched"><div class="kpi-icon amber">!</div><div><span>${t("wocAcOnlyCount")}</span><strong>${fmt(acOnly.length)}</strong></div></div>
+    <div class="card kpi kpi-filter ${active("4_MES WOs unmatched")}" data-wocsheet="4_MES WOs unmatched"><div class="kpi-icon amber">!</div><div><span>${t("wocMesOnlyCount")}</span><strong>${fmt(mesOnly.length)}</strong></div></div>
+    <div class="card kpi kpi-filter ${active("5_Plan Adjudication")}" data-wocsheet="5_Plan Adjudication"><div class="kpi-icon blue">%</div><div><span>${t("wocPlanCount")}</span><strong>${fmt(plan.length)}</strong></div></div>`;
 }
 function renderWoCompareTable(){
   if(!$("wocRows"))return;
@@ -2079,6 +2083,8 @@ function renderCompare(){
   $("cmpMissing").textContent=unmapped;
   $("cmpRate").textContent=(routeSteps?Math.round(calculated/routeSteps*100):0)+"%";
   $("compareCount").textContent=all.length+" "+t("records");
+  const cmpSf=$("compareStatus")?.value||"ALL";
+  $("compare").querySelectorAll(".kpi-filter").forEach(el=>el.classList.toggle("active",el.dataset.status===cmpSf));
 
   const pages=Math.max(1,Math.ceil(all.length/state.comparePageSize));
   state.comparePage=Math.min(Math.max(1,state.comparePage),pages);
@@ -2768,12 +2774,20 @@ $("runCompare").onclick=()=>{buildComparisons();toast(t("analyzeRouting"))};
 $("exportRoutingExcel").onclick=exportRoutingAnalysisExcel;
 $("compareSearch").oninput=()=>{state.comparePage=1;renderCompare()};
 $("compareStatus").onchange=()=>{state.comparePage=1;renderCompare()};
+$("compare").querySelectorAll(".kpi-filter").forEach(el=>el.onclick=()=>{
+  $("compareStatus").value=$("compareStatus").value===el.dataset.status?"ALL":el.dataset.status;
+  state.comparePage=1;renderCompare();
+});
 $("reconcileSearch").oninput=()=>{reconcilePage=1;renderReconcile()};
 $("reconcileStatusFilter").onchange=()=>{reconcilePage=1;renderReconcile()};
+$("reconcile").querySelectorAll(".kpi-filter").forEach(el=>el.onclick=()=>{
+  $("reconcileStatusFilter").value=$("reconcileStatusFilter").value===el.dataset.status?"ALL":el.dataset.status;
+  reconcilePage=1;renderReconcile();
+});
 $("exportPartMatch").onclick=exportPartMatchExcel;
 $("exportConvFactor").onclick=exportConvFactorExcel;
 $("cfSearch").oninput=renderConvFactor;
-document.querySelectorAll(".cf-filter").forEach(el=>el.onclick=()=>{cfConfFilter=el.dataset.conf;renderConvFactor()});
+$("convfactor").querySelectorAll(".kpi-filter").forEach(el=>el.onclick=()=>{cfConfFilter=el.dataset.conf;renderConvFactor()});
 $("exportReconcile").onclick=exportReconcileExcel;
 $("exportWoCompare").onclick=exportWoCompareExcel;
 $("exportFeasibilityPdf").onclick=()=>window.print();
@@ -2784,11 +2798,14 @@ document.querySelectorAll(".woc-dept").forEach(b=>b.onclick=()=>{
   document.querySelectorAll(".woc-dept").forEach(x=>{x.classList.toggle("primary",x===b);x.classList.toggle("ghost",x!==b)});
   renderWoCompare();
 });
-document.querySelectorAll(".woc-sheet").forEach(b=>b.onclick=()=>{
-  wocSheet=b.dataset.wocsheet;wocPage=1;
-  document.querySelectorAll(".woc-sheet").forEach(x=>{x.classList.toggle("primary",x===b);x.classList.toggle("ghost",x!==b)});
+function setWocSheet(sheet){
+  wocSheet=sheet;wocPage=1;
+  document.querySelectorAll(".woc-sheet").forEach(x=>{x.classList.toggle("primary",x.dataset.wocsheet===sheet);x.classList.toggle("ghost",x.dataset.wocsheet!==sheet)});
+  $("wocKpis").querySelectorAll(".kpi-filter").forEach(x=>x.classList.toggle("active",x.dataset.wocsheet===sheet));
   renderWoCompareTable();
-});
+}
+document.querySelectorAll(".woc-sheet").forEach(b=>b.onclick=()=>setWocSheet(b.dataset.wocsheet));
+$("wocKpis").onclick=e=>{const tile=e.target.closest(".kpi-filter");if(tile)setWocSheet(tile.dataset.wocsheet)};
 try{const saved=JSON.parse(localStorage.getItem("mesActualCostFieldMap")||"null");if(saved)state.fieldMap={...state.fieldMap,...saved}}catch(e){}
 
 document.querySelectorAll(".entry-tab").forEach(b=>b.onclick=()=>{
