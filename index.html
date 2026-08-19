@@ -53,6 +53,7 @@ padding:10px 14px;border-radius:999px;z-index:1}.dot{display:inline-block;width:
 .blue{background:#e7efff;color:#2563eb}.violet{background:#eeeafd;color:#7c5ce7}.green{background:#e4f7f0;color:#0f9f72}
 .red{background:#fdebed;color:#dc4c60}.amber{background:#fff4dc;color:#d78a0b}
 .kpi span{display:block;color:var(--muted);font-size:12px}.kpi strong{display:block;font-size:22px;margin:4px 0}.kpi small{color:#9aa4b2}
+.cf-filter{cursor:pointer;border:2px solid transparent;transition:.15s}.cf-filter:hover{border-color:#cfd8e6}.cf-filter.active{border-color:var(--primary);background:#f2f6ff}
 .grid-2{display:grid;grid-template-columns:1.15fr .85fr;gap:17px;margin-bottom:17px}
 .panel{padding:20px}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .panel-head h3{margin:0;font-size:17px}.panel-head p{margin:5px 0 0;font-size:12px;color:var(--muted)}
@@ -725,10 +726,10 @@ border-radius:11px;background:#eef4ff;border:1px solid #d8e5ff;color:#254f91;fon
 
   <div class="kpis">
     <div class="card kpi"><div class="kpi-icon blue">📦</div><div><span data-t="cfTotalCsItems">箱計價料號總數</span><strong id="cfTotalCsItems">0</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon green">✓</div><div><span data-t="cfComputed">已可計算係數</span><strong id="cfComputed">0</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon green">●</div><div><span data-t="cfHigh">高信心度</span><strong id="cfHigh">0</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon amber">●</div><div><span data-t="cfMedium">中信心度</span><strong id="cfMedium">0</strong></div></div>
-    <div class="card kpi"><div class="kpi-icon red">●</div><div><span data-t="cfLow">低信心度</span><strong id="cfLow">0</strong></div></div>
+    <div class="card kpi cf-filter active" id="cfFilterALL" data-conf="ALL"><div class="kpi-icon green">✓</div><div><span data-t="cfComputed">已可計算係數</span><strong id="cfComputed">0</strong></div></div>
+    <div class="card kpi cf-filter" id="cfFilterhigh" data-conf="high"><div class="kpi-icon green">●</div><div><span data-t="cfHigh">高信心度</span><strong id="cfHigh">0</strong></div></div>
+    <div class="card kpi cf-filter" id="cfFiltermedium" data-conf="medium"><div class="kpi-icon amber">●</div><div><span data-t="cfMedium">中信心度</span><strong id="cfMedium">0</strong></div></div>
+    <div class="card kpi cf-filter" id="cfFilterlow" data-conf="low"><div class="kpi-icon red">●</div><div><span data-t="cfLow">低信心度</span><strong id="cfLow">0</strong></div></div>
     <div class="card kpi"><div class="kpi-icon"><span>—</span></div><div><span data-t="cfNoData">尚無資料</span><strong id="cfNoData">0</strong></div></div>
   </div>
 
@@ -1221,6 +1222,7 @@ function reconcileMatches(){
   return results;
 }
 let reconcilePage=1;
+let cfConfFilter="ALL";
 const reconcilePageSize=20;
 function renderReconcile(){
   if(!$("reconcileRows"))return;
@@ -1450,8 +1452,11 @@ function renderConvFactor(){
   $("cfLow").textContent=fmt(data.low);
   $("cfNoData").textContent=fmt(data.noData);
 
+  document.querySelectorAll(".cf-filter").forEach(el=>el.classList.toggle("active",el.dataset.conf===cfConfFilter));
+
   const q=clean($("cfSearch")?.value).toLowerCase();
-  const filtered=q?data.rows.filter(r=>r.item.toLowerCase().includes(q)):data.rows;
+  let filtered=cfConfFilter==="ALL"?data.rows:data.rows.filter(r=>r.confidence===cfConfFilter);
+  if(q)filtered=filtered.filter(r=>r.item.toLowerCase().includes(q));
   const confLabel={high:t("cfConfHigh"),medium:t("cfConfMedium"),low:t("cfConfLow")};
   const confClass={high:"complete",medium:"partial",low:"unmatched"};
   $("cfRows").innerHTML=filtered.map(r=>`<tr>
@@ -2768,6 +2773,7 @@ $("reconcileStatusFilter").onchange=()=>{reconcilePage=1;renderReconcile()};
 $("exportPartMatch").onclick=exportPartMatchExcel;
 $("exportConvFactor").onclick=exportConvFactorExcel;
 $("cfSearch").oninput=renderConvFactor;
+document.querySelectorAll(".cf-filter").forEach(el=>el.onclick=()=>{cfConfFilter=el.dataset.conf;renderConvFactor()});
 $("exportReconcile").onclick=exportReconcileExcel;
 $("exportWoCompare").onclick=exportWoCompareExcel;
 $("exportFeasibilityPdf").onclick=()=>window.print();
